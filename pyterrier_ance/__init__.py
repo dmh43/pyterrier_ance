@@ -100,7 +100,6 @@ class ANCEIndexer(TransformerBase):
                 self.args, query=False), "passages", gengen, is_query_inference=False)
         
             dim=passage_embedding.shape[1]
-            faiss.omp_set_num_threads(16)
             cpu_index = faiss.IndexFlatIP(dim)
             cpu_index.add(passage_embedding)
             faiss_file = os.path.join(self.index_path, str(segment) + ".faiss")
@@ -151,8 +150,6 @@ class ANCERetrieval(TransformerBase):
         self.num_results = num_results
         from pyterrier import tqdm
 
-        #faiss.omp_set_num_threads(16)
-        
         config, tokenizer, model = _load_model(self.args, self.checkpoint_path)
         self.model = model
         self.tokenizer = tokenizer
